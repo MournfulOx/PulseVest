@@ -187,11 +187,16 @@ class _FuturesTile extends StatelessWidget {
             style: TextStyle(
                 fontSize: 9, color: Colors.white.withOpacity(0.4))),
         const SizedBox(height: 2),
-        Text(
-          quote != null
-              ? NumberFormat('#,##0').format(quote!.price.round())
-              : '--',
-          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            quote != null
+                ? NumberFormat('#,##0').format(quote!.price.round())
+                : '--',
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+            maxLines: 1,
+          ),
         ),
         const SizedBox(height: 1),
         Text(
