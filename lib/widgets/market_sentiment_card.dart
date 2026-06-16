@@ -180,13 +180,26 @@ class _FuturesTile extends StatelessWidget {
     final changeColor =
         pct == null ? Colors.white24 : (isUp ? const Color(0xFF4CAF50) : Colors.redAccent);
 
+    final subtitle = label == 'NDX'
+        ? '纳斯达克'
+        : label == 'SPX'
+            ? '标普500'
+            : label == 'NQ'
+                ? 'NQ 期货'
+                : 'ES 期货';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label == 'NDX' ? '纳斯达克100' : label == 'SPX' ? '标普500' : '$label 期货',
+        Text(subtitle,
             style: TextStyle(
                 fontSize: 9, color: Colors.white.withOpacity(0.4))),
-        const SizedBox(height: 2),
+        const SizedBox(height: 1),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5),
+        ),
+        const SizedBox(height: 1),
         FittedBox(
           fit: BoxFit.scaleDown,
           alignment: Alignment.centerLeft,
@@ -194,16 +207,15 @@ class _FuturesTile extends StatelessWidget {
             quote != null
                 ? NumberFormat('#,##0').format(quote!.price.round())
                 : '--',
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             maxLines: 1,
           ),
         ),
-        const SizedBox(height: 1),
         Text(
           pct != null
               ? '${isUp ? '+' : ''}${pct.toStringAsFixed(2)}%'
               : '--',
-          style: TextStyle(fontSize: 11, color: changeColor),
+          style: TextStyle(fontSize: 10, color: changeColor),
         ),
       ],
     );
