@@ -2,20 +2,34 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../services/market_data_service.dart';
 
-class MarketProvider extends ChangeNotifier {
+class MarketProvider extends ChangeNotifier with WidgetsBindingObserver {
   final _service = MarketDataService();
   Timer? _timer;
+  DateTime? _lastRefresh;
 
   MarketSnapshot? snapshot;
+  Map<String, MarketQuote?> stockQuotes = {};
   bool isLoading = false;
 
   MarketProvider() {
+    WidgetsBinding.instance.addObserver(this);
     refresh();
-    _timer = Timer.periodic(const Duration(minutes: 15), (_) => refresh());
+    _timer = Timer.periodic(const Duration(minutes: 1), (_) => refresh());
+  }
+
+  // Refresh when app returns to foreground if data is older than 5 minutes
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      final stale = _lastRefresh == null ||
+          DateTime.now().difference(_lastRefresh!) > const Duration(minutes: 1);
+      if (stale) refresh();
+    }
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _timer?.cancel();
     super.dispose();
   }
@@ -24,7 +38,15 @@ class MarketProvider extends ChangeNotifier {
     if (isLoading) return;
     isLoading = true;
     notifyListeners();
-    snapshot = await _service.fetch(forceRefresh: true);
+
+    // Run market indices and stock watchlist in parallel
+    final snapFuture   = _service.fetch(forceRefresh: true);
+    final stocksFuture = _service.fetchStocks();
+
+    snapshot    = await snapFuture;
+    stockQuotes = await stocksFuture;
+    _lastRefresh = DateTime.now();
+
     isLoading = false;
     notifyListeners();
   }
@@ -36,7 +58,6 @@ class MarketProvider extends ChangeNotifier {
     return '极度恐慌';
   }
 
-  // ── 10年期美债 ──────────────────────────────────────
   String tnxLabel(double yield) {
     if (yield < 3) return '宽松环境';
     if (yield < 4) return '中性';
@@ -49,7 +70,6 @@ class MarketProvider extends ChangeNotifier {
     return '高利率压制估值，成长股承压，留意回调风险';
   }
 
-  // ── 美国CPI ────────────────────────────────────────
   String cpiLabel(double yoy) {
     if (yoy < 2) return '通胀受控';
     if (yoy < 3) return '温和';

@@ -5,6 +5,7 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'providers/calculator_provider.dart';
 import 'providers/currency_provider.dart';
 import 'providers/market_provider.dart';
+import 'providers/fund_provider.dart';
 import 'screens/home_screen.dart';
 
 void main() async {
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CalculatorProvider()),
         ChangeNotifierProvider(create: (_) => CurrencyProvider()),
         ChangeNotifierProvider(create: (_) => MarketProvider()),
+        ChangeNotifierProvider(create: (_) => FundProvider()),
       ],
       child: MaterialApp(
         title: '积川',

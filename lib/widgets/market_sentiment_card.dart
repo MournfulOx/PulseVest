@@ -63,21 +63,13 @@ class _Header extends StatelessWidget {
               style: TextStyle(
                   fontSize: 11, color: Colors.white.withOpacity(0.35))),
           const Spacer(),
-          GestureDetector(
-            onTap: market.isLoading ? null : market.refresh,
-            child: AnimatedOpacity(
-              opacity: market.isLoading ? 0.3 : 1.0,
-              duration: const Duration(milliseconds: 200),
-              child: Icon(Icons.refresh, size: 16, color: scheme.primary),
-            ),
-          ),
         ],
       ),
     );
   }
 }
 
-// ─── Price Row (VIX / NQ / ES) ─────────────────────────────────────────────
+// ─── Price Row (VIX / NDX / SPX / ES) ──────────────────────────────────────
 
 class _PriceRow extends StatelessWidget {
   final MarketSnapshot? snap;
@@ -96,8 +88,6 @@ class _PriceRow extends StatelessWidget {
           Expanded(child: _FuturesTile(label: 'NDX', quote: snap?.ndx)),
           _VertDivider(),
           Expanded(child: _FuturesTile(label: 'SPX', quote: snap?.spx)),
-          _VertDivider(),
-          Expanded(child: _FuturesTile(label: 'NQ', quote: snap?.nq)),
           _VertDivider(),
           Expanded(child: _FuturesTile(label: 'ES', quote: snap?.es)),
         ],
@@ -184,9 +174,7 @@ class _FuturesTile extends StatelessWidget {
         ? '纳斯达克'
         : label == 'SPX'
             ? '标普500'
-            : label == 'NQ'
-                ? 'NQ 期货'
-                : 'ES 期货';
+            : 'ES 期货';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

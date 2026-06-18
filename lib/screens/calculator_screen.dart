@@ -9,7 +9,6 @@ import '../widgets/result_card.dart';
 import '../widgets/input_slider.dart';
 import '../widgets/goal_calculator.dart';
 import '../widgets/reminder_sheet.dart';
-import '../widgets/market_sentiment_card.dart';
 
 class CalculatorScreen extends StatelessWidget {
   const CalculatorScreen({super.key});
@@ -26,8 +25,6 @@ class CalculatorScreen extends StatelessWidget {
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 _CurrencyRateBar(),
-                const SizedBox(height: 12),
-                const MarketSentimentCard(),
                 const SizedBox(height: 16),
                 _ResultSummary(),
                 const SizedBox(height: 20),

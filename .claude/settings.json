@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Skill(run)",
-      "Skill(run:*)"
+      "Skill(run:*)",
+      "PowerShell($env:PATH += \";$env:LOCALAPPDATA\\\\Android\\\\Sdk\\\\platform-tools\"; cd D:\\\\Projects\\\\PulseVest; flutter run -d emulator-5554 2>&1)",
+      "PowerShell($env:ANDROID_HOME = \"C:\\\\Users\\\\furik\\\\AppData\\\\Local\\\\Android\\\\Sdk\"; $env:ANDROID_SDK_ROOT = \"C:\\\\Users\\\\furik\\\\AppData\\\\Local\\\\Android\\\\Sdk\"; cd D:\\\\Projects\\\\PulseVest; flutter build apk --release 2>&1)",
+      "PowerShell($env:ANDROID_HOME = \"C:\\\\Users\\\\furik\\\\AppData\\\\Local\\\\Android\\\\Sdk\"; $env:ANDROID_SDK_ROOT = \"C:\\\\Users\\\\furik\\\\AppData\\\\Local\\\\Android\\\\Sdk\"; cd D:\\\\Projects\\\\PulseVest; flutter build apk --debug 2>&1 | Select-String \"Built|error\" | Select-Object -Last 3)"
     ]
   }
 }

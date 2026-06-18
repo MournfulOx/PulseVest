@@ -30,6 +30,14 @@ class NotificationService {
     await _plugin.initialize(
       const InitializationSettings(android: androidSettings, iOS: iosSettings),
     );
+
+    // Android 13+ requires explicit runtime permission for notifications.
+    if (Platform.isAndroid) {
+      await _plugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.requestNotificationsPermission();
+    }
     _initialized = true;
   }
 
@@ -88,6 +96,27 @@ class NotificationService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('reminder_day', dayOfMonth);
     await prefs.setBool('reminder_enabled', true);
+  }
+
+  /// Fire an immediate one-off alert (used for live price-tier signals).
+  Future<void> showAlert(String title, String body) async {
+    await initialize();
+    if (!_isPlatformSupported) return;
+    await _plugin.show(
+      DateTime.now().millisecondsSinceEpoch ~/ 1000 % 100000 + 1000,
+      title,
+      body,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'position_signal',
+          '持仓信号',
+          channelDescription: '补仓 / 止盈 价格触发提醒',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(),
+      ),
+    );
   }
 
   Future<void> cancelReminder() async {
