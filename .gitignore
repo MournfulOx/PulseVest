@@ -58,3 +58,10 @@ ios/Runner/GeneratedPluginRegistrant.*
 macos/Flutter/GeneratedPluginRegistrant.swift
 
 # Keep assets/icon/ — needed for flutter_launcher_icons on other machines
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
